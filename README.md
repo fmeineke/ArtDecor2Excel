@@ -2,6 +2,9 @@
 
 Transform NFDI4Health Metadataschema from ArtDecor ot Excel Format.
 
+## Prerequisites
+*  mvn, make, wget and recent java runtime
+
 ## Install
 *  clone
 *  type `make`
