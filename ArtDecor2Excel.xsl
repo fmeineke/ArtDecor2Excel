@@ -37,7 +37,7 @@
 <xsl:template name="no">
 	<xsl:value-of select="$newline"/>
 	<xsl:value-of select="'=&quot;'"/>
-	<xsl:number count="concept[@statusCode='draft']" level="multiple"/>
+	<xsl:number count="concept[@statusCode='final']" level="multiple"/>
 	<xsl:value-of select="'&quot;;'"/>
 </xsl:template>
 
