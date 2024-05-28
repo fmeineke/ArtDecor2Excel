@@ -12,7 +12,7 @@
 </xsl:text></xsl:variable>
 
 <xsl:template match="/dataset">
-	<xsl:text>No 3_3;Item;Data Type;Cardinality;Allowed Values;Data element heading || Short name to display (display_name);Data element description (description)</xsl:text>
+	<xsl:text>No 3_3;Item;Data Type;Cardinality;Allowed Values;Data element heading || Short name to display (display_name);Data element description (description);Data element additional information - short input help (short_input_help);Data element additional information - input example (input_example)</xsl:text>
 	<xsl:apply-templates select="concept">
 	</xsl:apply-templates>
 </xsl:template>
@@ -57,6 +57,14 @@
 	<xsl:value-of select="concat(substring-after(normalize-space(rationale/p[1]),'Description: '),';')"/>
 </xsl:template>
 
+<xsl:template name="short_input_help">
+	<xsl:value-of select="concat(substring-after(normalize-space(operationalization/p[1]),'Short input help: '),';')"/>
+</xsl:template>
+
+<xsl:template name="input_example">
+	<xsl:value-of select="concat(normalize-space(valueDomain/example),';')"/>
+</xsl:template>
+
 <xsl:template match="concept[@statusCode='cancelled']" priority="1"/>
 
 <xsl:template match="concept[@type='group']">
@@ -66,6 +74,8 @@
 	<xsl:call-template name="cardinality"/>
 	<xsl:call-template name="heading"/>
 	<xsl:call-template name="description"/>
+	<xsl:call-template name="short_input_help"/>
+	<xsl:call-template name="input_example"/>
 	<xsl:apply-templates select="concept"/>
 </xsl:template>
 
@@ -91,6 +101,8 @@
 	</xsl:choose>
 	<xsl:call-template name="heading"/>
 	<xsl:call-template name="description"/>
+	<xsl:call-template name="short_input_help"/>
+	<xsl:call-template name="input_example"/>
 </xsl:template>
 
 </xsl:stylesheet>
