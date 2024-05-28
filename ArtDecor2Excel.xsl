@@ -64,6 +64,7 @@
 	<xsl:call-template name="item"/>
 	<xsl:value-of select="'BackboneElement;'"/>
 	<xsl:call-template name="cardinality"/>
+	<xsl:value-of select="'-;'"/>
 	<xsl:call-template name="heading"/>
 	<xsl:call-template name="description"/>
 	<xsl:apply-templates select="concept"/>
