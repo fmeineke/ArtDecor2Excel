@@ -66,7 +66,28 @@
 </xsl:template>
 
 <xsl:template name="short_input_help">
-	<xsl:value-of select="concat(substring-after(normalize-space(operationalization/p[1]),'Short input help: '),';')"/>
+	<xsl:variable name="content">
+		<xsl:apply-templates select="operationalization/p[1]"/>
+	</xsl:variable>
+	<xsl:value-of select="concat($content, ';')"/>
+</xsl:template>
+
+<!-- Template for handling content of <p> elements -->
+<xsl:template match="p">
+	<xsl:for-each select="node()">
+		<xsl:choose>
+			<xsl:when test="self::text()">
+				<xsl:value-of select="normalize-space(.)"/>
+			</xsl:when>
+			<xsl:when test="self::br">
+				<!-- Replace line breaks with spaces -->
+				<xsl:text> </xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="node()"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:for-each>
 </xsl:template>
 
 <xsl:template name="input_example">
