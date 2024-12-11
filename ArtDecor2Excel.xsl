@@ -18,7 +18,10 @@
 </xsl:template>
 
 <xsl:template name="cardinality">
-	<xsl:value-of select="concat(@minimumMultiplicity,'..',@maximumMultiplicity,';')"/>
+	<xsl:variable name="cardinalityComment" select="comment[p[starts-with(normalize-space(.), 'Cardinality:')]][1]/p[1]"/>
+	<!-- replace non-breaking spaces (&#160;) with regular spaces -->
+	<!-- (non-breaking spaces are not handled by normalize-space) -->
+	<xsl:value-of select="concat('&quot;', substring-after(normalize-space(translate($cardinalityComment, '&#160;', ' ')), 'Cardinality: '), '&quot;;')"/>
 </xsl:template>
 
 <!-- each code item on separate line - for excel: wrap all with quotes -->
@@ -77,6 +80,7 @@
 	<xsl:call-template name="item"/>
 	<xsl:value-of select="'BackboneElement;'"/>
 	<xsl:call-template name="cardinality"/>
+	<xsl:value-of select="'-;'"/>
 	<xsl:call-template name="heading"/>
 	<xsl:call-template name="description"/>
 	<xsl:call-template name="additional_information"/>
