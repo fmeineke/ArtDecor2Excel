@@ -12,7 +12,7 @@
 </xsl:text></xsl:variable>
 
 <xsl:template match="/dataset">
-	<xsl:text>No 3_3;Item;Data Type;Cardinality;Allowed Values;Data element heading || Short name to display (display_name);Data element description (description);Data element additional information - short input help (short_input_help);Data element additional information - input example (input_example)</xsl:text>
+	<xsl:text>No 3_3;Item;Data Type;Cardinality;Allowed Values;Data element heading || Short name to display (display_name);Data element description (description);Data element additional information - general information (additional_information);Data element additional information - short input help (short_input_help);Data element additional information - input example (input_example)</xsl:text>
 	<xsl:apply-templates select="concept">
 	</xsl:apply-templates>
 </xsl:template>
@@ -57,6 +57,11 @@
 	<xsl:value-of select="concat(substring-after(normalize-space(rationale/p[1]),'Description: '),';')"/>
 </xsl:template>
 
+<xsl:template name="additional_information">
+	<xsl:variable name="additionalInformationComment" select="comment[p[starts-with(normalize-space(.), 'Additional information:')]][1]/p[1]"/>
+	<xsl:value-of select="concat(substring-after(normalize-space($additionalInformationComment), 'Additional information: '), ';')"/>
+</xsl:template>
+
 <xsl:template name="short_input_help">
 	<xsl:value-of select="concat(substring-after(normalize-space(operationalization/p[1]),'Short input help: '),';')"/>
 </xsl:template>
@@ -74,6 +79,7 @@
 	<xsl:call-template name="cardinality"/>
 	<xsl:call-template name="heading"/>
 	<xsl:call-template name="description"/>
+	<xsl:call-template name="additional_information"/>
 	<xsl:call-template name="short_input_help"/>
 	<xsl:call-template name="input_example"/>
 	<xsl:apply-templates select="concept"/>
@@ -87,7 +93,7 @@
 			<xsl:value-of select="'CodeableConcept;'"/>
 			<xsl:call-template name="cardinality"/>
 			<xsl:call-template name="allowedValues"/>
-		</xsl:when >
+		</xsl:when>
 		<xsl:when test="valueDomain[@type='number' or @type='quantity']">
 			<xsl:value-of select="'integer;'"/>
 			<xsl:call-template name="cardinality"/>
@@ -101,6 +107,7 @@
 	</xsl:choose>
 	<xsl:call-template name="heading"/>
 	<xsl:call-template name="description"/>
+	<xsl:call-template name="additional_information"/>
 	<xsl:call-template name="short_input_help"/>
 	<xsl:call-template name="input_example"/>
 </xsl:template>
