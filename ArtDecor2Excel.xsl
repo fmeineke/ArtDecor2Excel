@@ -91,7 +91,7 @@
 </xsl:template>
 
 <xsl:template name="input_example">
-	<xsl:value-of select="concat(normalize-space(valueDomain/example),';')"/>
+	<xsl:value-of select="normalize-space(valueDomain/example)"/>
 </xsl:template>
 
 <xsl:template match="concept[@statusCode='cancelled']" priority="1"/>
