@@ -62,7 +62,10 @@
 
 <xsl:template name="additional_information">
 	<xsl:variable name="additionalInformationComment" select="comment[p[starts-with(normalize-space(.), 'Additional information:')]][1]/p[1]"/>
-	<xsl:value-of select="concat(substring-after(normalize-space($additionalInformationComment), 'Additional information: '), ';')"/>
+	<xsl:variable name="content">
+		<xsl:apply-templates select="$additionalInformationComment"/>
+	</xsl:variable>
+	<xsl:value-of select="concat($content, ';')"/>
 </xsl:template>
 
 <xsl:template name="short_input_help">
