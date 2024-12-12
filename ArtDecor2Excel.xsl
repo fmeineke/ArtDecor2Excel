@@ -53,11 +53,14 @@
 </xsl:template>
 
 <xsl:template name="heading">
-	<xsl:value-of select="concat(normalize-space(desc/p[1]),';')"/>
+	<xsl:value-of select="concat('&quot;', normalize-space(desc/p[1]),'&quot;;')"/>
 </xsl:template>
 
 <xsl:template name="description">
-	<xsl:value-of select="concat(substring-after(normalize-space(rationale/p[1]),'Description: '),';')"/>
+	<xsl:variable name="content">
+		<xsl:apply-templates select="rationale/p[1]"/>
+	</xsl:variable>
+	<xsl:value-of select="concat('&quot;', $content, '&quot;;')"/>
 </xsl:template>
 
 <xsl:template name="additional_information">
@@ -65,14 +68,14 @@
 	<xsl:variable name="content">
 		<xsl:apply-templates select="$additionalInformationComment"/>
 	</xsl:variable>
-	<xsl:value-of select="concat($content, ';')"/>
+	<xsl:value-of select="concat('&quot;', $content, '&quot;;')"/>
 </xsl:template>
 
 <xsl:template name="short_input_help">
 	<xsl:variable name="content">
-		<xsl:apply-templates select="operationalization/p[1]"/>
+		<xsl:apply-templates select="operationalization[1]/p[1]"/>
 	</xsl:variable>
-	<xsl:value-of select="concat($content, ';')"/>
+	<xsl:value-of select="concat('&quot;', $content, '&quot;;')"/>
 </xsl:template>
 
 <!-- Template for handling content of <p> elements -->
@@ -94,7 +97,7 @@
 </xsl:template>
 
 <xsl:template name="input_example">
-	<xsl:value-of select="normalize-space(valueDomain/example)"/>
+	<xsl:value-of select="concat('&quot;', normalize-space(valueDomain/example), '&quot;')"/>
 </xsl:template>
 
 <xsl:template match="concept[@statusCode='cancelled']" priority="1"/>
