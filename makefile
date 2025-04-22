@@ -1,45 +1,56 @@
-CSV_FILES = Core.csv Design.csv NutritionalEpidemiology.csv ChronicDiseases.csv RecordLinkage.csv
+CSV_FILES = MDS_Core_V3_3_1.csv MDS_Design_V3_3_1.csv MDS_NutritionalEpidemiology_V3_3_1.csv MDS_ChronicDiseases_V3_3_1.csv MDS_RecordLinkage_V3_3_1.csv
+CSV_FILES_MAIN = MDS_Core_V3_3_1.csv MDS_Design_V3_3_1.csv
 
-all: MDS_V3_3.csv Design.csv Core.csv RecordLinkage.csv NutritionalEpidemiology.csv ChronicDiseases.csv
+all: MDS_V3_3_1.csv MDS_Core_Design_V3_3_1.csv MDS_Design_V3_3_1.csv MDS_Core_V3_3_1.csv MDS_RecordLinkage_V3_3_1.csv MDS_NutritionalEpidemiology_V3_3_1.csv MDS_ChronicDiseases_V3_3_1.csv
 
-CoreMDS33.xml:
-	wget 'http://art-decor.org/decor/services/RetrieveTransaction?id=2.16.840.1.113883.3.1937.777.64.4.4&effectiveDate=2023-11-28T00%3A00%3A00&language=en-US&ui=de-DE&format=xml' -O $@
+MDS_Core_V3_3_1.xml:
+	curl --location -H "Accept: application/xml" 'http://art-decor.org/exist/apps/api/transaction/2.16.840.1.113883.3.1937.777.64.4.33/2025-04-10T00%3A00%3A00/$$extract?language=en-US&format=xml&download=true' -o $@
 
-Design33.xml:
-	wget 'http://art-decor.org/decor/services/RetrieveTransaction?id=2.16.840.1.113883.3.1937.777.64.4.8&effectiveDate=2023-12-21T00%3A00%3A00&language=en-US&ui=de-DE&format=xml' -O $@
+MDS_Design_V3_3_1.xml:
+	curl --location -H "Accept: application/xml" 'http://art-decor.org/exist/apps/api/transaction/2.16.840.1.113883.3.1937.777.64.4.28/2025-04-04T00%3A00%3A00/$$extract?language=en-US&format=xml&download=true' -o $@
 
-RecordLinkage33.xml:
-	wget 'https://art-decor.org/decor/services/RetrieveTransaction?id=2.16.840.1.113883.3.1937.777.64.4.6&format=xml' -O $@
+MDS_RecordLinkage_V3_3_1.xml:
+	curl --location -H "Accept: application/xml" 'http://art-decor.org/exist/apps/api/transaction/2.16.840.1.113883.3.1937.777.64.4.27/2025-04-04T00%3A00%3A00/$$extract?language=en-US&format=xml&download=true' -o $@
 
-NutritionalEpidemiology33.xml:
-	wget 'https://art-decor.org/decor/services/RetrieveTransaction?id=2.16.840.1.113883.3.1937.777.64.4.10&format=xml' -O $@
+MDS_NutritionalEpidemiology_V3_3_1.xml:
+	curl --location -H "Accept: application/xml" 'http://art-decor.org/exist/apps/api/transaction/2.16.840.1.113883.3.1937.777.64.4.23/2025-04-03T00%3A00%3A00/$$extract?language=en-US&format=xml&download=true' -o $@
 
-ChronicDiseases33.xml:
-	wget 'https://art-decor.org/decor/services/RetrieveTransaction?id=2.16.840.1.113883.3.1937.777.64.4.12&format=xml' -O $@
+MDS_ChronicDiseases_V3_3_1.xml:
+	curl --location -H "Accept: application/xml" 'http://art-decor.org/exist/apps/api/transaction/2.16.840.1.113883.3.1937.777.64.4.29/2025-04-04T00%3A00%3A00/$$extract?language=en-US&format=xml&download=true' -o $@
 
 clean: 
 	rm -f $(CSV_FILES)
 
 distclean: clean
-	rm -f CoreMDS33.xml Design33.xml RecordLinkage33.xml NutritionalEpidemiology33.xml ChronicDiseases33.xml Saxon-HE-12.4.jar xmlresolver-6.0.4.jar
+	rm -f MDS_Core_V3_3_1.xml MDS_Design_V3_3_1.xml MDS_RecordLinkage_V3_3_1.xml MDS_NutritionalEpidemiology_V3_3_1.xml MDS_ChronicDiseases_V3_3_1.xml Saxon-HE-12.4.jar xmlresolver-6.0.4.jar
 
-Design.csv: Design33.xml ArtDecor2Excel.xsl Saxon-HE-12.4.jar xmlresolver-6.0.4.jar
+MDS_Design_V3_3_1.csv: MDS_Design_V3_3_1.xml ArtDecor2Excel.xsl Saxon-HE-12.4.jar xmlresolver-6.0.4.jar
 	java -cp "*" net.sf.saxon.Transform -xsl:ArtDecor2Excel.xsl -s:$< -o:$@
 
-Core.csv: CoreMDS33.xml ArtDecor2Excel.xsl Saxon-HE-12.4.jar xmlresolver-6.0.4.jar
+MDS_Core_V3_3_1.csv: MDS_Core_V3_3_1.xml ArtDecor2Excel.xsl Saxon-HE-12.4.jar xmlresolver-6.0.4.jar
 	java -cp "*" net.sf.saxon.Transform -xsl:ArtDecor2Excel.xsl -s:$< -o:$@
 
-RecordLinkage.csv: RecordLinkage33.xml ArtDecor2Excel.xsl Saxon-HE-12.4.jar xmlresolver-6.0.4.jar
+MDS_RecordLinkage_V3_3_1.csv: MDS_RecordLinkage_V3_3_1.xml ArtDecor2Excel.xsl Saxon-HE-12.4.jar xmlresolver-6.0.4.jar
 	java -cp "*" net.sf.saxon.Transform -xsl:ArtDecor2Excel.xsl -s:$< -o:$@
 
-NutritionalEpidemiology.csv: NutritionalEpidemiology33.xml ArtDecor2Excel.xsl Saxon-HE-12.4.jar xmlresolver-6.0.4.jar
+MDS_NutritionalEpidemiology_V3_3_1.csv: MDS_NutritionalEpidemiology_V3_3_1.xml ArtDecor2Excel.xsl Saxon-HE-12.4.jar xmlresolver-6.0.4.jar
 	java -cp "*" net.sf.saxon.Transform -xsl:ArtDecor2Excel.xsl -s:$< -o:$@
 
-ChronicDiseases.csv: ChronicDiseases33.xml ArtDecor2Excel.xsl Saxon-HE-12.4.jar xmlresolver-6.0.4.jar
+MDS_ChronicDiseases_V3_3_1.csv: MDS_ChronicDiseases_V3_3_1.xml ArtDecor2Excel.xsl Saxon-HE-12.4.jar xmlresolver-6.0.4.jar
 	java -cp "*" net.sf.saxon.Transform -xsl:ArtDecor2Excel.xsl -s:$< -o:$@
 
-MDS_V3_3.csv: $(CSV_FILES)
-	head -n 1 Core.csv > $@
+MDS_Core_Design_V3_3_1.csv: $(CSV_FILES_MAIN)
+# print column headers
+	head -n 1 MDS_Core_V3_3_1.csv > $@
+# print rows
+	for file in $(CSV_FILES_MAIN); do \
+		tail -n+2 $$file && echo ""; \
+	done >> $@
+
+MDS_V3_3_1.csv: $(CSV_FILES)
+# print column headers
+	head -n 1 MDS_Core_V3_3_1.csv > $@
+# print rows
 	for file in $(CSV_FILES); do \
 		tail -n+2 $$file && echo ""; \
 	done >> $@
