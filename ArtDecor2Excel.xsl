@@ -12,7 +12,7 @@
 </xsl:text></xsl:variable>
 
 <xsl:template match="/dataset">
-	<xsl:text>No 3_3;Item;Data Type;Cardinality;Allowed Values;Data element heading || Short name to display (display_name);Data element description (description);Data element additional information - general information (additional_information);Data element additional information - short input help (short_input_help);Data element additional information - input example (input_example)</xsl:text>
+	<xsl:text>No;Item;Data Type;Cardinality;Allowed Values;Data element heading || Short name to display (display_name);Data element description (description);Data element additional information - general information (additional_information);Data element additional information - short input help (short_input_help);Data element additional information - input example (input_example)</xsl:text>
 	<xsl:apply-templates select="concept">
 	</xsl:apply-templates>
 </xsl:template>
