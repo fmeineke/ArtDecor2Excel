@@ -97,7 +97,15 @@
 </xsl:template>
 
 <xsl:template name="input_example">
-	<xsl:value-of select="concat('&quot;', normalize-space(valueDomain/example), '&quot;')"/>
+	<xsl:variable name="examples">
+		<xsl:for-each select="valueDomain/example">
+			<xsl:value-of select="normalize-space(.)"/>
+			<xsl:if test="position() != last()">
+				<xsl:text>, </xsl:text>
+			</xsl:if>
+		</xsl:for-each>
+	</xsl:variable>
+	<xsl:value-of select="concat('&quot;', $examples, '&quot;')"/>
 </xsl:template>
 
 <xsl:template match="concept[@statusCode='cancelled']" priority="1"/>
