@@ -108,7 +108,7 @@
 	<xsl:value-of select="concat('&quot;', $examples, '&quot;')"/>
 </xsl:template>
 
-<xsl:template match="concept[@statusCode='cancelled']" priority="1"/>
+<xsl:template match="concept[@statusCode='cancelled' or @statusCode='rejected']" priority="1"/>
 
 <xsl:template match="concept[@type='group']">
 	<xsl:call-template name="no"/>
