@@ -15,6 +15,6 @@ This will
 -	does transformations with XSLT Stylesheet 
 -	creates csv files (one for Design, one for Core), which can be opened by excel
 
-Version 2.2024 © F. Meineke for NFDI4Health
+Version 31.3.2026 © F. Meineke for NFDI4Health
 
 ART-DECOR® is a registered trademark.
