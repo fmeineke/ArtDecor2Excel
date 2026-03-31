@@ -12,7 +12,7 @@
 </xsl:text></xsl:variable>
 
 <xsl:template match="/dataset">
-	<xsl:text>No 3_3;Item;Data Type;Cardinality;Allowed Values;Data element heading || Short name to display (display_name);Data element description (description);Data element additional information - general information (additional_information);Data element additional information - short input help (short_input_help);Data element additional information - input example (input_example)</xsl:text>
+	<xsl:text>No;Item;Data Type;Cardinality;Allowed Values;Data element heading || Short name to display (display_name);Data element description (description);Data element additional information - general information (additional_information);Data element additional information - short input help (short_input_help);Data element additional information - input example (input_example)</xsl:text>
 	<xsl:apply-templates select="concept">
 	</xsl:apply-templates>
 </xsl:template>
@@ -97,10 +97,18 @@
 </xsl:template>
 
 <xsl:template name="input_example">
-	<xsl:value-of select="concat('&quot;', normalize-space(valueDomain/example), '&quot;')"/>
+	<xsl:variable name="examples">
+		<xsl:for-each select="valueDomain/example">
+			<xsl:value-of select="normalize-space(.)"/>
+			<xsl:if test="position() != last()">
+				<xsl:text>, </xsl:text>
+			</xsl:if>
+		</xsl:for-each>
+	</xsl:variable>
+	<xsl:value-of select="concat('&quot;', $examples, '&quot;')"/>
 </xsl:template>
 
-<xsl:template match="concept[@statusCode='cancelled']" priority="1"/>
+<xsl:template match="concept[@statusCode='cancelled' or @statusCode='rejected']" priority="1"/>
 
 <xsl:template match="concept[@type='group']">
 	<xsl:call-template name="no"/>
