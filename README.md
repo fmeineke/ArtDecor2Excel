@@ -1,4 +1,4 @@
-# ArtDecor2Excel
+# MDS-ArtDecor2Excel
 
 Transform NFDI4Health Metadataschema from ArtDecor ot Excel Format.
 
