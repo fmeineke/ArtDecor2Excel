@@ -1,8 +1,5 @@
 <xsl:stylesheet
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:x="http://www.w3.org/2005/xpath-functions"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	exclude-result-prefixes="xs x" 
 	version="3.0">
 
 <xsl:output method="text"/>
@@ -11,17 +8,18 @@
 <xsl:variable name="newline"><xsl:text>
 </xsl:text></xsl:variable>
 
+<xsl:param name="sep"><xsl:text>;</xsl:text></xsl:param>
+
 <xsl:template match="/dataset">
-	<xsl:text>No;Item;Data Type;Cardinality;Allowed Values;Data element heading || Short name to display (display_name);Data element description (description);Data element additional information - general information (additional_information);Data element additional information - short input help (short_input_help);Data element additional information - input example (input_example)</xsl:text>
-	<xsl:apply-templates select="concept">
-	</xsl:apply-templates>
+	<xsl:value-of select="string-join(('No','Item','Data Type','Cardinality','Allowed Values','Data element heading || Short name to display (display_name)','Data element description (description)','Data element additional information - general information (additional_information)','Data element additional information - short input help (short_input_help)','Data element additional information - input example (input_example)'), $sep)"/>
+	<xsl:apply-templates select="concept"/>
 </xsl:template>
 
 <xsl:template name="cardinality">
 	<xsl:variable name="cardinalityComment" select="comment[p[starts-with(normalize-space(.), 'Cardinality:')]][1]/p[1]"/>
 	<!-- replace non-breaking spaces (&#160;) with regular spaces -->
 	<!-- (non-breaking spaces are not handled by normalize-space) -->
-	<xsl:value-of select="concat('&quot;', substring-after(normalize-space(translate($cardinalityComment, '&#160;', ' ')), 'Cardinality: '), '&quot;;')"/>
+	<xsl:value-of select="concat('&quot;', substring-after(normalize-space(translate($cardinalityComment, '&#160;', ' ')), 'Cardinality: '), '&quot;', $sep)"/>
 </xsl:template>
 
 <!-- each code item on separate line - for excel: wrap all with quotes -->
@@ -33,15 +31,15 @@
 			<xsl:value-of select="$newline"/>
 		</xsl:if>
 	</xsl:for-each>
-	<xsl:value-of select="'&quot;;'"/>
+	<xsl:value-of select="concat('&quot;', $sep)"/>
 </xsl:template>
 
 <!-- XSLT magic for numbering - for exel quote like "=1.1" to prevent automatic date conversion -->
 <xsl:template name="no">
 	<xsl:value-of select="$newline"/>
 	<xsl:value-of select="'=&quot;'"/>
-	<xsl:number count="concept[@statusCode='final']" level="multiple"/>
-	<xsl:value-of select="'&quot;;'"/>
+	<xsl:number count="concept[not(@statusCode='cancelled') and not(@statusCode='rejected')]" level="multiple" from="dataset"/>
+	<xsl:value-of select="concat('&quot;', $sep)"/>
 </xsl:template>
 
 <xsl:template name="item">
@@ -49,18 +47,18 @@
 		<xsl:value-of select="name/text()"/>
 		<xsl:value-of select="'.'"/>
 	</xsl:for-each>
-	<xsl:value-of select="concat(name/text(),';')"/>
+	<xsl:value-of select="concat(name/text(), $sep)"/>
 </xsl:template>
 
 <xsl:template name="heading">
-	<xsl:value-of select="concat('&quot;', normalize-space(desc/p[1]),'&quot;;')"/>
+	<xsl:value-of select="concat('&quot;', normalize-space(desc/p[1]),'&quot;', $sep)"/>
 </xsl:template>
 
 <xsl:template name="description">
 	<xsl:variable name="content">
 		<xsl:apply-templates select="rationale/p[1]"/>
 	</xsl:variable>
-	<xsl:value-of select="concat('&quot;', $content, '&quot;;')"/>
+	<xsl:value-of select="concat('&quot;', $content, '&quot;', $sep)"/>
 </xsl:template>
 
 <xsl:template name="additional_information">
@@ -68,14 +66,14 @@
 	<xsl:variable name="content">
 		<xsl:apply-templates select="$additionalInformationComment"/>
 	</xsl:variable>
-	<xsl:value-of select="concat('&quot;', $content, '&quot;;')"/>
+	<xsl:value-of select="concat('&quot;', $content, '&quot;', $sep)"/>
 </xsl:template>
 
 <xsl:template name="short_input_help">
 	<xsl:variable name="content">
 		<xsl:apply-templates select="operationalization[1]/p[1]"/>
 	</xsl:variable>
-	<xsl:value-of select="concat('&quot;', $content, '&quot;;')"/>
+	<xsl:value-of select="concat('&quot;', $content, '&quot;', $sep)"/>
 </xsl:template>
 
 <!-- Template for handling content of <p> elements -->
@@ -113,9 +111,9 @@
 <xsl:template match="concept[@type='group']">
 	<xsl:call-template name="no"/>
 	<xsl:call-template name="item"/>
-	<xsl:value-of select="'BackboneElement;'"/>
+	<xsl:value-of select="concat('BackboneElement', $sep)"/>
 	<xsl:call-template name="cardinality"/>
-	<xsl:value-of select="'-;'"/>
+	<xsl:value-of select="concat('-', $sep)"/>
 	<xsl:call-template name="heading"/>
 	<xsl:call-template name="description"/>
 	<xsl:call-template name="additional_information"/>
@@ -129,19 +127,19 @@
 	<xsl:call-template name="item"/>
 	<xsl:choose>
 		<xsl:when test="valueDomain[@type='code']">
-			<xsl:value-of select="'CodeableConcept;'"/>
+			<xsl:value-of select="concat('CodeableConcept', $sep)"/>
 			<xsl:call-template name="cardinality"/>
 			<xsl:call-template name="allowedValues"/>
 		</xsl:when>
 		<xsl:when test="valueDomain[@type='number' or @type='quantity']">
-			<xsl:value-of select="'integer;'"/>
+			<xsl:value-of select="concat('integer', $sep)"/>
 			<xsl:call-template name="cardinality"/>
-			<xsl:value-of select="'-;'"/>
+			<xsl:value-of select="concat('-', $sep)"/>
 		</xsl:when>
 		<xsl:otherwise>
-			<xsl:value-of select="concat(valueDomain/@type,';')"/>
+			<xsl:value-of select="concat(valueDomain/@type, $sep)"/>
 			<xsl:call-template name="cardinality"/>
-			<xsl:value-of select="'-;'"/>
+			<xsl:value-of select="concat('-', $sep)"/>
 		</xsl:otherwise>
 	</xsl:choose>
 	<xsl:call-template name="heading"/>
